@@ -7,7 +7,7 @@ from scipy import misc
 from glob import glob
 
 
-# Lee el fichero donde aparecen el nombre de la clase con el nombre del archivo
+# Lee el fichero (annotation.txt )donde aparecen el nombre de la clase con el nombre del archivo
 # y lo almacena en dos variables. array_id (numero) y array_clase(catedral, etc..)
 
 #450 imagenes en la carpeta train
@@ -19,7 +19,7 @@ num_picture_val=180+1;
 i=0 #variable de iteración para guardar cada palabra
 array_id = ["" for x in range(num_picture_val)] # Vector que almacena las id's aleatorias
 array_clase = ["" for x in range(num_picture_val)] #Vector que almacena el nombre de la case (catedral...etc.)
-
+fichero_final=open("Text_ID_picture.txt","w") # abre un fichero
 with open('./TerrassaBuildings900/val/annotation.txt','r') as fichero:
     ##linia= fichero.readlines()
     for linea in fichero: # mientras haya lineas..
@@ -27,7 +27,11 @@ with open('./TerrassaBuildings900/val/annotation.txt','r') as fichero:
                                 # la variable words tiene las posiciones que palabras haya en la linia, en este caso dos
         array_id[i]=words[0] # almacena la id aleatoria
         array_clase[i]=words[1] # almaena el nombre de la clase
-        i=i+1 # incrementa la iteración para que el vector ntenga las posiciones
+        fichero_final.write(words[0]+"\n") #escribe la id en el fichero por cada fichero
+        i=i+1 # incrementa la iteración para que el vector tenga las posiciones que debe tener(180)
+
+
+fichero_final.close() # cierra el fichero_final
 
 
 #Pruebas para comprobar que la id[1] corresponde al nombre clase[1]
