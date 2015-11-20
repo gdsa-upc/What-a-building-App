@@ -8,7 +8,7 @@ from glob import glob
 
 
 # Lee el fichero (annotation.txt )donde aparecen el nombre de la clase con el nombre del archivo
-# y lo almacena en dos variables. array_id (numero) y array_clase(catedral, etc..)
+# y lo almacena en dos variables. array_id (numero) y array_clase(catedral, etc..). Despues lo escribe en un fichero .txt
 
 #450 imagenes en la carpeta train
 #180 imagenes en la carpeta val
