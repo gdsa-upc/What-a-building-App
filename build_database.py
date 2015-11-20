@@ -17,7 +17,7 @@ num_picture_train=450+1;
 num_picture_val=180+1;
 
 i=0 #variable de iteración para guardar cada palabra
-array_id = ["" for x in range(num_picture_val)] # Venctor que almaena las id's aleatorias
+array_id = ["" for x in range(num_picture_val)] # Vector que almacena las id's aleatorias
 array_clase = ["" for x in range(num_picture_val)] #Vector que almacena el nombre de la case (catedral...etc.)
 
 with open('./TerrassaBuildings900/val/annotation.txt','r') as fichero:
