@@ -1,8 +1,4 @@
 # -*- coding: utf-8 -*-
-
-
-#Aquest script ha de“()
-
 import cv2 #Llibreria: http://opencv.org/
 import numpy as np # Llirebria: http://www.numpy.org/
 import matplotlib.pyplot as plt
@@ -11,28 +7,36 @@ from scipy import misc
 from glob import glob
 
 
+# Lee el fichero donde aparecen el nombre de la clase con el nombre del archivo
+# y lo almacena en dos variables. array_id (numero) y array_clase(catedral, etc..)
 
-image_data = np.zeros(512*512, dtype=np.float32).reshape(512,512); #Crea un array(matriz) de zeros tipo float
-random_data = np.random.randn(512,512) ;#Te genera un array(matriz) con numeros random de 512*512
-random_data[1][4]; #acceder a la posicion 1,4 del array.
-print 'Size: ', image_data.size  #tamaño
-print 'Shape: ', image_data.shape #forma 512x512
+#450 imagenes en la carpeta train
+#180 imagenes en la carpeta val
 
-scaled_image_data = image_data / 255
-imsave('noise.png', scaled_image_data)
+num_picture_train=450+1;
+num_picture_val=180+1;
 
-## información útil: http://prancer.physics.louisville.edu/astrowiki/index.php/Image_processing_with_Python_and_SciPy
+i=0 #variable de iteración para guardar cada palabra
+array_id = ["" for x in range(num_picture_val)] # Venctor que almaena las id's aleatorias
+array_clase = ["" for x in range(num_picture_val)] #Vector que almacena el nombre de la case (catedral...etc.)
+
+with open('./TerrassaBuildings900/val/annotation.txt','r') as fichero:
+    ##linia= fichero.readlines()
+    for linea in fichero: # mientras haya lineas..
+        words = linea.split() # lee las palabras de cada linia haciendo un split()
+                                # la variable words tiene las posiciones que palabras haya en la linia, en este caso dos
+        array_id[i]=words[0] # almacena la id aleatoria
+        array_clase[i]=words[1] # almaena el nombre de la clase
+        i=i+1 # incrementa la iteración para que el vector ntenga las posiciones
 
 
-#Te genera 10 imagenes .png con valores random de 0  a 255 y le hace un rescalado a 100x100
-for i in range(10):
-    #im = np.random.randn(512,512)
-    im = np.random.random_integers(0, 255, 10000).reshape((100, 100))
-    misc.imsave('random_%02d.png' % i, im)
+#Pruebas para comprobar que la id[1] corresponde al nombre clase[1]
+#Las posiciones 0 quedan utilizadas para almacenar el nombre de los campos ImageID y ClassID
 
-filelist = glob('random*.png')
-filelist.sort()
+print("Image ID: " + array_id[1])
+print("Class ID: " + array_clase[1])
 
-im[1] #imagen 1 creada..
-im[3].size
-im[4].shape
+print(words) # muestra la última posicion la 180 del vector, que es la ultima que ha leido
+
+print("Image ID: " + array_id[180])
+print("Class ID: " + array_clase[180])
