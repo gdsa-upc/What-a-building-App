@@ -21,6 +21,17 @@ path_imagenes_val = "../TerrassaBuildings900/val/images/"
 dir_archivos_txt = "../txt/"
 dir_descriptores = "../descriptores/"
 
+f = open("../TerrassaBuildings900/val/annotation.txt", "r") #Obrim l'arxiu per llegir el validation de ground truth
+gt_val = f.readlines()
+f.close()
+
+g = open("../TerrassaBuildings900/train/annotation.txt", "r") #Obrim l'arxiu per llegir el training de ground truth
+gt_train = g.readlines()
+g.close()
+
+h = open("../txt/classificacio.txt", "r") #Obrim l'arxiu per llegir el training de ground truth
+classi = h.readlines()
+h.close()
 
 # accuracy test
 y_true = [0, 1, 2, 0, 1, 2]
