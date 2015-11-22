@@ -37,23 +37,29 @@ dir_descrip_train = "./descriptores/train/"
 
 def get_features(directorio_imagenes, archivo_image_id, directorio_descriptores):
 
+
     archivo_imageid = open(dir_archivos_txt+archivo_image_id, 'r') #Abrir el archivo de con las ID's de las imangenes
-    descriptor_file = open(directorio_descriptores+"Descriptors.p", 'w') #Abrir un fichero txt para guardar los descriptores
+    #descriptor_file = open(directorio_descriptores+"Descriptors.txt", 'w') #Abrir un fichero txt para guardar los descriptores
     dict_caracteristicas={} #creamos un diccionario vacio
     for id_linia in archivo_imageid:
 
         vector_caract_random = np.random.random_integers(0, 255, 100) ;#Te genera un array con  100 numeros random entre 0 y 255
-        #a = id_linia.split();
-        #print('Entro')
-        #dict_caracteristicas = id_linia.split()
-        #dict_caracteristicas = vector_caract_random  #afegim el vector de caracteristiques aleatori al diccionari
-        #print(dict_caracteristicas)
-        final = id_linia.index("\n") #obtenim la posició del salt de línia
-        dict_caracteristicas[id_linia[0:final]] = vector_caract_random #afegim el vector de caracteristiques aleatori al diccionari
+        linia = id_linia.split(); # lee la linia del fichero
+        dict_caracteristicas [linia[0]] = vector_caract_random #asignamos por cada linia un vector de caracteristicas diferente
 
-    pickle.dumps = (dict_caracteristicas, descriptor_file)
+        if archivo_image_id == "ID_images_train.txt":
+            pickle.dump(dict_caracteristicas, open(dir_descrip_train+"descriptor_" + "train.p", "wb" ) ) # guarda el diccionario en un archivo .p
+        else:
+            pickle.dump(dict_caracteristicas, open(dir_descrip_val+"descriptor_" + "val.p", "wb" ) ) # guarda el diccionario en un archivo .p
+
     archivo_imageid.close()
-    descriptor_file.close()
+    #descriptor_file.close()
 
 
 get_features(patch_imagenes_train,"ID_images_train.txt", dir_descriptores)
+get_features(patch_imagenes_val, "ID_images_val.txt", dir_descriptores)
+
+#Load a pickle file
+
+dict_train = pickle.load( open(dir_descrip_val+"descriptor_val.p", "rb" ) ) #lee el archivo creado .p donde esta el diccionario.
+dict_train = pickle.load( open(dir_descrip_train+"descriptor_train.p", "rb" ) )#
