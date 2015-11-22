@@ -26,8 +26,8 @@ import numpy as np
 
 
 
-patch_imagenes_train = "../TerrassaBuildings900/train/images/"
-patch_imagenes_val = "../TerrassaBuildings900/val/images/"
+path_imagenes_train = "../TerrassaBuildings900/train/images/"
+path_imagenes_val = "../TerrassaBuildings900/val/images/"
 #dir_src = "././src"
 #dir_actual = "././"
 dir_archivos_txt = "../txt/"
@@ -58,8 +58,8 @@ def get_features(directorio_imagenes, archivo_image_id, directorio_descriptores)
     #descriptor_file.close()
 
 
-get_features(patch_imagenes_train,"ID_images_train.txt", dir_descriptores)
-get_features(patch_imagenes_val, "ID_images_val.txt", dir_descriptores)
+get_features(path_imagenes_train,"ID_images_train.txt", dir_descriptores)
+get_features(path_imagenes_val, "ID_images_val.txt", dir_descriptores)
 
 #Load a pickle file
 

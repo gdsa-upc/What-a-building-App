@@ -28,8 +28,8 @@ import os
 
 #Para utilizar las variables de patch debemos ejecutar el script desde la carpeta /src.
 
-patch_imagenes_train = "../TerrassaBuildings900/train/images/" #Esta variable la utilizamos para referirnos al directorio donde extraer las imagenes.
-patch_imagenes_val = "../TerrassaBuildings900/val/images/" #Si estamos en el directorio /src y ejecutamos ../ volvemos al directorio el cual pertenece que es nuestro directorio master.
+path_imagenes_train = "../TerrassaBuildings900/train/images/" #Esta variable la utilizamos para referirnos al directorio donde extraer las imagenes.
+path_imagenes_val = "../TerrassaBuildings900/val/images/" #Si estamos en el directorio /src y ejecutamos ../ volvemos al directorio el cual pertenece que es nuestro directorio master.
 #dir_src = "../src"                     #
 #dir_actual = "./"
 dir_archivos_txt = "../txt/"
@@ -47,5 +47,5 @@ def build_database(directorio_imagenes, directorio_txt, trainorval): #Se define 
 
 # Crear los dos ficheros txt con las ID para cada directorio
 
-build_database(patch_imagenes_train,dir_archivos_txt,"train")
-build_database(patch_imagenes_val,dir_archivos_txt,"val")
+build_database(path_imagenes_train,dir_archivos_txt,"train")
+build_database(path_imagenes_val,dir_archivos_txt,"val")
