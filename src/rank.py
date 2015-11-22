@@ -5,7 +5,7 @@ import numpy as np
 
 # Calcular distancia: POR IMPLEMENTAR
 def distance(x, y): 
-    return np.random.randint(0, 450)
+    return np.random.randint(0, 451)
 
 def rank(features_file, results_dir, features_train):
     features_val = pickle.load( open("../descriptores/"+features_file, "r" ) )
