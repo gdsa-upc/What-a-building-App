@@ -20,8 +20,9 @@ def rank(features_file, results_dir, features_train):
     vector= []
     for k_val, v_val in features_val.items():
         rank= open(results_dir + "/rank_" + k_val +'.txt', 'w')
-        for k_train, v_train in features_train.items():   
-            vector.insert( distance(v_train[0], v_val[0])  ,k_train)
+        for k_train, v_train in features_train.items():
+            # Como aún no debe estar implementado del todo, calculamos la "distancia" solo con el primer valor
+            vector.insert( distance(v_train[0], v_val[0])  ,k_train) 
         for item in vector:
             rank.write("%s\n" % item)
         vector=[]
