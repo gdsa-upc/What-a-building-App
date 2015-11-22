@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import cv2
+
 import pickle #Ejemplos de serialización: https://docs.python.org/2/library/pickle.html
 import numpy as np
 import os
@@ -21,16 +21,25 @@ path_imagenes_val = "../TerrassaBuildings900/val/images/"
 dir_archivos_txt = "../txt/"
 dir_descriptores = "../descriptores/"
 
-#Asignamos un valor aleatorio de clasificacion para cada imagen de val/test:
 
 
-def get_features(feature_file, direc_guardat, possible_labels):
-    archivo_imageid = open(dir_archivos_txt+archivo_image_id, 'r') #obrim l'arxiu amb les id de les imatges
+def classify(features_file, results_dir, vector_etiquetes):
+    ImID = pickle.load( open("../descriptores/" + features_file, "r" ) ) #Obrim l'arxiu amb les Im ID'
+    classi = open(result_dir + "classificacio.txt") #Creem l'arxiu per guardar els resultats
     
-    if not os.path.exists(directorio_descriptores): #ens asegurem de que el directori sigui el correcte
-        os.makedirs(directorio_descriptores)
-    
-  
-    for id_linia in archivo_imageid: #engeguem el for per a implementar la classificació aleatòria.
-        vector = []
-        #aqui es donde me falla el cerebro.
+    #For per asignar un edifici random despres de cada id després de una tabulació: 29796-14601-23662	catedral
+    for keyval, valuesval in ImID.items():
+        descrip = pickle.load(open(dir_descriptores+features_file, "r")) #Obrim l'arxiu per llegir les im ID's
+        classi.write(keyval + "/t" + vector_etiquetes[np.random.randint(0, 12)]) #Asignem una classificació aleatoria depenent de la posició (random) del vector d'etiquetes
+        descrip.close()
+        
+    classi.close()
+   
+#definim un vector amb totes les posibles etiquetes:
+
+vector_etiquetes = ["mnactec", "mercat_independencia", "ajuntament", "societat_general", "estacio_nord", "dona_treballadora", "escola_enginyeria", "catedral", "teatre_principal", "farmacia_albinyana", "masia_freixa", "castell_cartoixa", "desconegut"]
+
+
+#cridem a la funció:
+
+classify ("descriptor_train.p", dir_archivos_txt, vector_etiquetes)
