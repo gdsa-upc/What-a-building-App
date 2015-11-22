@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 
-
 ##import cv2 #Llibreria: http://opencv.org/
 #import numpy as np # Llirebria: http://www.numpy.org/
 #import matplotlib.pyplot as plt
@@ -21,17 +20,19 @@ import os
 
 #Para utilizar el patch se debe utilizar una estructura asi:
 
-#         /     /TerrassaBuildings900 -> Aqui estaran las imagenes
-#         /     /src                  -> Aqui guardaremos los archivos .py
-#         /     /txt                  -> Guardaremos los ficheros txt generados
-#         /     /build_database.py
+#         /     /TerrassaBuildings900         -> Aqui estaran las imagenes
+#         /     /src   build_database.py      -> Aqui guardaremos los archivos .py
+#         /     /txt                          -> Guardaremos los ficheros txt generados
+#         /     /
 
 
-patch_imagenes_train = "./TerrassaBuildings900/train/images/"
-patch_imagenes_val = "./TerrassaBuildings900/val/images/"
-#dir_src = "./src"
+#Para utilizar las variables de patch debemos ejecutar el script desde la carpeta /src.
+
+patch_imagenes_train = "../TerrassaBuildings900/train/images/" #Esta variable la utilizamos para referirnos al directorio donde extraer las imagenes.
+patch_imagenes_val = "../TerrassaBuildings900/val/images/" #Si estamos en el directorio /src y ejecutamos ../ volvemos al directorio el cual pertenece que es nuestro directorio master.
+#dir_src = "../src"                     #
 #dir_actual = "./"
-dir_archivos_txt = "./txt/"
+dir_archivos_txt = "../txt/"
 
 
 
