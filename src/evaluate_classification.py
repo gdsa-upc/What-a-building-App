@@ -29,7 +29,7 @@ g = open("../TerrassaBuildings900/train/annotation.txt", "r") #Obrim l'arxiu per
 gt_train = g.readlines()
 g.close()
 
-h = open("../txt/classificacio.txt", "r") #Obrim l'arxiu per llegir el training de ground truth
+h = open("../txt/classificacio.txt", "r") #Obrim l'arxiu de classificacio
 classi = h.readlines()
 h.close()
 
