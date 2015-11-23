@@ -55,17 +55,17 @@ for i in gt_train:
     except:
         j=j+1
 
-h = open("../txt/classificacio.txt", "r") 
-aa_train = h.readlines()
+h = open("../txt/classificacio.txt", "r") #Obrim l'arxiu val de automatic annotation
+aa_val = h.readlines()
 h.close()
 j=0
-aa_train.pop(0)
-for i in aa_train:
+
+for i in aa_val:
     try:
         label = i.replace('\n','') 
         label=label.split('\t') 
         label=label[1] 
-        aa_train[j]=label 
+        aa_val[j]=label 
         j=j+1
     except:
         j=j+1
@@ -77,25 +77,17 @@ for i in aa_train:
 #y_pred = [aa_train]
 
 print("Accuracy")
-print( accuracy_score(gt_train, aa_train))
+print( accuracy_score(gt_val, aa_val))
 print("\n")
-'''
-# average precision test
-y2_true = np.array([0, 0, 1, 1])
-y_scores = np.array([0.1, 0.4, 0.35, 0.8])
 
-print("average precision")
-print(average_precision_score(y2_true, y_scores) )
-print("\n")
-'''
 #Precision test 
 #The precision is the ratio tp / (tp + fp)
 print("Precision general")
-print(precision_score(gt_train, aa_train, average='macro')) #ho calcula per tots
+print(precision_score(gt_val, aa_val, average='macro')) #ho calcula per tots
 print("\n")
 
 print("Precision per cada classe")
-print(precision_score(gt_train, aa_train, average=None)) #ho calcula per tots
+print(precision_score(gt_val, aa_val, average=None)) #ho calcula per tots
 print("\n")
 
 
@@ -103,23 +95,23 @@ print("\n")
 # recall is the ratio tp / (tp + fn) 
 
 print("Recall general")
-print(recall_score(gt_train, aa_train, average='macro')) #ho calcula per tots
+print(recall_score(gt_val, aa_val, average='macro')) #ho calcula per tots
 print("\n")
 
 print("Recall per cada classe")
-print(recall_score(gt_train, aa_train, average=None)) #ho calcula per cada classe
+print(recall_score(gt_val, aa_val, average=None)) #ho calcula per cada classe
 print("\n")
 
 #F1 score test
 # F1 = 2 * (precision * recall) / (precision + recall)
 print("F1-score en general")
-print(f1_score(gt_train, aa_train, average='macro')) #ho calcula per tots
+print(f1_score(gt_val, aa_val, average='macro')) #ho calcula per tots
 print("\n")
 
 print("F1-score per cada classe")
-print(f1_score(gt_train, aa_train, average=None)) #ho calcula per tots
+print(f1_score(gt_val, aa_val, average=None)) #ho calcula per tots
 print("\n")
 
 #confusion matrix test
 print("Matriu confusió")
-print(confusion_matrix(gt_train, aa_train))
+print(confusion_matrix(gt_val, aa_val))
