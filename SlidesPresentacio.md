@@ -6,3 +6,4 @@ https://docs.google.com/presentation/d/1nhOBICOFf1w9uZaILL3p_XdLangvuzF6UWGSWky7
 
 Sessió 3:
 https://docs.google.com/presentation/d/1eWARLhBUta1__Fkso_XZCJwunTnInZsQYMJ8I9ivgh8/edit?usp=sharing
+ 
