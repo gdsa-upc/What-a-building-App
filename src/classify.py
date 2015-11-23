@@ -37,4 +37,4 @@ def classify(features_file, results_dir, vector_etiquetes):
 vector_etiquetes = ["mnactec", "mercat_independencia", "ajuntament", "societat_general", "estacio_nord", "dona_treballadora", "escola_enginyeria", "catedral", "teatre_principal", "farmacia_albinyana", "masia_freixa", "castell_cartoixa", "desconegut"]
 
 
-classify ("descriptor_train.p", dir_archivos_txt, vector_etiquetes)
+classify ("descriptor_val.p", dir_archivos_txt, vector_etiquetes)
