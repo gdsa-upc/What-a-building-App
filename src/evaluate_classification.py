@@ -4,7 +4,6 @@ import pickle #Ejemplos de serialización: https://docs.python.org/2/library/pic
 import numpy as np
 import os
 from sklearn.metrics import accuracy_score
-from sklearn.metrics import average_precision_score
 from sklearn.metrics import recall_score
 from sklearn.metrics import f1_score
 from sklearn.metrics import confusion_matrix
@@ -39,21 +38,6 @@ for i in gt_val:
     except:
         j=j+1
 
-g = open("../TerrassaBuildings900/train/annotation.txt", "r") #Obrim l'arxiu per llegir el training de ground truth
-gt_train = g.readlines()
-g.close()
-
-j=0
-gt_train.pop(0) 
-for i in gt_train:
-    try:
-        label = i.replace('\n','') 
-        label=label.split('\t') 
-        label=label[1] 
-        gt_train[j]=label 
-        j=j+1
-    except:
-        j=j+1
 
 h = open("../txt/classificacio.txt", "r") #Obrim l'arxiu val de automatic annotation
 aa_val = h.readlines()
