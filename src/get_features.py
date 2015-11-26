@@ -7,25 +7,6 @@ import os
 #450 imagenes en la carpeta train
 #180 imagenes en la carpeta val
 
-#num_picture_train=450+1;
-#num_picture_val=180+1;
-
-#    Para utilizar el path se debe utilizar una estructura asi:
-
-#    TerrassaBuildings900               -> Aquí deben estar las imágenes
-#    src                                -> Aquí deben estar los archivos .py
-#    txt                                -> Aquí guardaremos los ficheros txt generados
-
-
-
-
-
-path_imagenes_train = "../TerrassaBuildings900/train/images/"
-path_imagenes_val = "../TerrassaBuildings900/val/images/"
-dir_archivos_txt = "../txt/"
-dir_descriptores = "../descriptores/"
-
-
 #archivo image id es el nombre del archivo. En este caso hay dos ID_images_train.txt o ID_images_val.txt
 
 def get_features(directorio_imagenes, archivo_image_id, directorio_descriptores):
@@ -56,10 +37,25 @@ def get_features(directorio_imagenes, archivo_image_id, directorio_descriptores)
     #descriptor_file.close()
 
 
-get_features(path_imagenes_train,"ID_images_train.txt", dir_descriptores)
-get_features(path_imagenes_val, "ID_images_val.txt", dir_descriptores)
+if __name__=="__main__":
 
-#Load a pickle file
+    #    Para utilizar el path se debe utilizar una estructura asi:
 
-dict_val = pickle.load( open(dir_descriptores+"descriptor_val.p", "rb" ) ) #lee el archivo creado .p donde esta el diccionario.
-dict_train = pickle.load( open(dir_descriptores+"descriptor_train.p", "rb" ) )#
+    #    TerrassaBuildings900               -> Aquí deben estar las imágenes
+    #    src                                -> Aquí deben estar los archivos .py
+    #    txt                                -> Aquí guardaremos los ficheros txt generados
+    #    descriptores                       -> Aquí guardaremos los descriptores generados
+
+
+    path_imagenes_train = "../TerrassaBuildings900/train/images/"
+    path_imagenes_val = "../TerrassaBuildings900/val/images/"
+    dir_archivos_txt = "../txt/"
+    dir_descriptores = "../descriptores/"
+
+
+    get_features(path_imagenes_train,"ID_images_train.txt", dir_descriptores)
+    get_features(path_imagenes_val, "ID_images_val.txt", dir_descriptores)
+
+    #Load a pickle file
+    dict_val = pickle.load( open(dir_descriptores+"descriptor_val.p", "rb" ) ) #lee el archivo creado .p donde esta el diccionario.
+    dict_train = pickle.load( open(dir_descriptores+"descriptor_train.p", "rb" ) )#
