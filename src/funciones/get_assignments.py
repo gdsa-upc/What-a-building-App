@@ -1,22 +1,23 @@
 import os
 import cv2
-import sklearn.metrics
 import scipy
 
 from funciones.train_codebook import train_codebook
 from funciones.get_local_features import get_features
+from scipy.cluster.vq import vq, kmeans, whiten
+
 
 
 def get_assignments(codebook, descriptores):
 
-    norm_descriptores = scipy.cluster.vq.whiten(descriptores, check_finite=True) #Normaliza descriptores
+    norm_descriptores = whiten(descriptores) #Normaliza descriptores
 
-    code,_ = scipy.cluster.vq.vq(norm_descriptores, codebook)
+    code,_ = vq(norm_descriptores, codebook)
 
     #He hecho pruebas por cada nueva linia que le metia a la funcion, aqui me he quedao.
 
 
-    return code
+   # return code
 
 
 
