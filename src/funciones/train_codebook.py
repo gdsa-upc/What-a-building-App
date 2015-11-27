@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import cv2
 import numpy as np
 from numpy import array
@@ -9,7 +10,7 @@ from funciones.get_local_features import get_features
 
 import sklearn.metrics
 import scipy
-#from scipy.cluster.vq import vq, kmeans, whiten
+from scipy.cluster.vq import vq, kmeans, whiten
 
 #Teoria clusters: http://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html
 #Cluster con kmeans: http://scikit-learn.org/stable/modules/clustering.html#k-means
@@ -27,11 +28,11 @@ import scipy
 def train_codebook(numClusters, descriptores): #Només para las imagenes de train
 
         # codebook={}
-    norm_descriptores = scipy.cluster.vq.whiten(descriptores, check_finite=True) #Normaliza descriptores
+    norm_descriptores = whiten(descriptores, check_finite=True) #Normaliza descriptores
         # assign_code = scipy.cluster.vq.vq(descriptores, codebook, check_finite=True)
 
         #book = array((norm_descriptores[0], norm_descriptores[1]))
-    codebook,_ = scipy.cluster.vq.kmeans(norm_descriptores, numClusters, iter=20, thresh=1e-05, check_finite=True)
+    codebook,_ = kmeans(norm_descriptores, numClusters, iter=20, thresh=1e-05, check_finite=True)
 
 
         #con  libreria cv2 pruebas de otros posibles valores
