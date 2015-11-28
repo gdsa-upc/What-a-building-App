@@ -3,63 +3,85 @@ import cv2
 import pickle #Ejemplos de serialización: https://docs.python.org/2/library/pickle.html
 import numpy as np
 import os
-
-#450 imagenes en la carpeta train
-#180 imagenes en la carpeta val
-
-#num_picture_train=450+1;
-#num_picture_val=180+1;
-
-#    Para utilizar el path se debe utilizar una estructura asi:
-
-#    TerrassaBuildings900               -> Aquí deben estar las imágenes
-#    src                                -> Aquí deben estar los archivos .py
-#    txt                                -> Aquí guardaremos los ficheros txt generados
+from funciones.bag_of_words import bag_of_words
+from funciones.get_local_features import get_local_features
+from funciones.train_codebook import train_codebook
+from funciones.get_assignments import get_assignments
+from scipy.cluster.vq import vq, kmeans, whiten
+import os.path
 
 
-
-
-
-path_imagenes_train = "../TerrassaBuildings900/train/images/"
-path_imagenes_val = "../TerrassaBuildings900/val/images/"
-dir_archivos_txt = "../txt/"
-dir_descriptores = "../descriptores/"
 
 
 #archivo image id es el nombre del archivo. En este caso hay dos ID_images_train.txt o ID_images_val.txt
 
-def get_features(directorio_imagenes, archivo_image_id, directorio_descriptores):
+def get_features(db_train_txt, db_val_txt, dir_train, dir_val):
 
+    n_rep= 5 #numero de imagenes que cogeras (para hacer pruebas)
+    db_train = open(db_train_txt, 'r') #Abrir el archivo de con las ID's de las imangenes
+    db_val = open(db_val_txt, 'r') #Abrir el archivo de con las ID's de las imangenes
 
-    archivo_imageid = open(dir_archivos_txt+archivo_image_id, 'r') #Abrir el archivo de con las ID's de las imangenes
-    dict_caracteristicas={} #creamos un diccionario vacio
-    
-    if not os.path.exists(directorio_descriptores):
-        os.makedirs(directorio_descriptores)
+    #if not os.path.exists(directorio_descriptores):
+    #    os.makedirs(directorio_descriptores)
 
+    vec_features=[]
+    i=0
+    for line in db_train:
+        if i>=n_rep:
+            break
+        i+=1
+        im_id = line[0:-1]
+        ruta= "../TerrassaBuildings900/train/images/" + str(im_id)
 
-    for id_linia in archivo_imageid:
-
-        vector_caract_random = np.random.random_integers(0, 255, 100) ;#Te genera un array con  100 numeros random entre 0 y 255
-        linia = id_linia.split(); # lee la linia del fichero
-        dict_caracteristicas [linia[0]] = vector_caract_random #asignamos por cada linia un vector de caracteristicas diferente
-
-
-        if archivo_image_id == "ID_images_train.txt":
-            pickle.dump(dict_caracteristicas, open(directorio_descriptores+"descriptor_" + "train.p", "wb" ) ) # guarda el diccionario en un archivo .p
+        if os.path.isfile(ruta + ".jpg"):
+            features= whiten(get_local_features(ruta + ".jpg"))
         else:
-            pickle.dump(dict_caracteristicas, open(directorio_descriptores+"descriptor_" + "val.p", "wb" ) ) # guarda el diccionario en un archivo .p
+            features= whiten(get_local_features(ruta + ".JPG"))
+
+        for feat in features:
+            vec_features.append(feat)
+
+    codebook= train_codebook(100, vec_features)
+
+    dic_train={}
+    i=0
+    db_train.seek(0)
+    for line in db_train:
+        if i>=n_rep:
+            break
+        i+=1
+        im_id= line[0:-1]
+        ruta= "../TerrassaBuildings900/train/images/" + str(im_id)
+        if os.path.isfile(ruta + ".jpg"):
+            features= whiten(get_local_features(ruta + ".jpg"))
+        else:
+            features= whiten(get_local_features(ruta + ".JPG"))
+
+        assignments= get_assignments(codebook, features)
+        bag= bag_of_words(assignments)
+        dic_train[im_id]= bag
+
+    dic_val={}
+    i=0
+    for line in db_val:
+        if i>=n_rep:
+            break
+        i+=1
+        im_id= line[0:-1]
+        ruta= "../TerrassaBuildings900/val/images/" + str(im_id)
+        if os.path.isfile(ruta + ".jpg"):
+            features= whiten(get_local_features(ruta + ".jpg"))
+        else:
+            features= whiten(get_local_features(ruta + ".JPG"))
+
+        assignments= get_assignments(codebook, features)
+        bag= bag_of_words(assignments)
+        print bag
+        dic_val[im_id]= bag
+ 
+    pickle.dump(dic_train, open("../txt/bow_train.p", "wb" ) )
+    pickle.dump(dic_val, open("../txt/bow_val.p", "wb" ) )
 
 
+get_features("../txt/ID_images_train.txt", "../txt/ID_images_val.txt", "../TerrassaBuildings900/train/images/", "../TerrassaBuildings900/val/images/")
 
-    archivo_imageid.close()
-    #descriptor_file.close()
-
-
-get_features(path_imagenes_train,"ID_images_train.txt", dir_descriptores)
-get_features(path_imagenes_val, "ID_images_val.txt", dir_descriptores)
-
-#Load a pickle file
-
-dict_val = pickle.load( open(dir_descriptores+"descriptor_val.p", "rb" ) ) #lee el archivo creado .p donde esta el diccionario.
-dict_train = pickle.load( open(dir_descriptores+"descriptor_train.p", "rb" ) )#
