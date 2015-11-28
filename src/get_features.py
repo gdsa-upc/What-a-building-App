@@ -77,6 +77,7 @@ def get_features(db_train_txt, db_val_txt, dir_train, dir_val):
         assignments= get_assignments(codebook, features)
         bag= bag_of_words(assignments)
         print bag
+        print len(bag)
         dic_val[im_id]= bag
  
     pickle.dump(dic_train, open("../txt/bow_train.p", "wb" ) )
