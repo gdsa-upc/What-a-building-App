@@ -6,6 +6,13 @@ import numpy as np
 # Calcular distancia: POR IMPLEMENTAR
 def distance(x, y): 
     return np.random.randint(0, 451)
+    
+#he encontrado esto: estoy mirando a ver si funciona para la funcion distance
+import numpy as np
+def find_nearest(array,value):
+    idx = (np.abs(array-value)).argmin()
+    return array[idx]
+#hasta aqui
 
 def rank(features_file, results_dir, features_train, annotation_path):
     features_val = pickle.load( open("../descriptores/"+features_file, "r" ) )
