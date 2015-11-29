@@ -6,6 +6,7 @@ import numpy as np
 # Calculalem la 'euclidean' distance:
 def euclidean(x, y): 
     dist = sklearn.metrics.pairwise.pairwise_distances(x,y)
+    return dist
     
 #capçelera rank
 def rank(features_file, features_val, features_train, annotation_path):
