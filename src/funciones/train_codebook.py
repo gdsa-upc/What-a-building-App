@@ -1,14 +1,10 @@
 # -*- coding: utf-8 -*-
-# -*- coding: utf-8 -*-
 import cv2
 import numpy as np
 from numpy import array
 import os
 
-from funciones.get_local_features import get_features
-
-
-import sklearn.metrics
+from funciones import *
 import scipy
 from scipy.cluster.vq import vq, kmeans, whiten
 
@@ -27,28 +23,18 @@ from scipy.cluster.vq import vq, kmeans, whiten
 
 def train_codebook(numClusters, descriptores): #Només para las imagenes de train
 
-        # codebook={}
-    norm_descriptores = whiten(descriptores, check_finite=True) #Normaliza descriptores
-        # assign_code = scipy.cluster.vq.vq(descriptores, codebook, check_finite=True)
 
-        #book = array((norm_descriptores[0], norm_descriptores[1]))
-    codebook,_ = kmeans(norm_descriptores, numClusters, iter=20, thresh=1e-05, check_finite=True)
+    centroides,_= kmeans(descriptores, numClusters)
 
-
-        #con  libreria cv2 pruebas de otros posibles valores
-            #criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 10, 1.0)
-            #b,a,codebook = cv2.kmeans(norm_descriptores, numClusters, None, criteria, 10, cv2.KMEANS_RANDOM_CENTERS)
-    return codebook; # Devuelve el vector codebook
-
-    #return norm_descriptores
-    #return norm_descriptores
-
-#Pruebas de la función, pruebas hechas desde la carpeta /src, cuidado que al estar la funcion en el directorio funciones, se suele cambiar solo y se lia parda.
-
-descriptoresss = get_features("../TerrassaBuildings900/train/images/4406-18633-1754.jpg")
-codebook1 = train_codebook(1, descriptoresss)
+    print "codebook creado\n"
+    return centroides # Devuelve el vector codebook
 
 
-print(codebook1.size)
-print(codebook1.shape)
-print(codebook1[:])
+if __name__== "__main__":
+    descriptoresss = get_local_features("../TerrassaBuildings900/train/images/4406-18633-1754.jpg")
+    codebook1 = train_codebook(1, descriptoresss)
+    
+    
+    print(codebook1.size)
+    print(codebook1.shape)
+    print(codebook1[:])
