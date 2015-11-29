@@ -1,27 +1,26 @@
-import os
-import cv2
-import scipy
-
-from funciones.train_codebook import train_codebook
-from funciones.get_local_features import get_features
-from scipy.cluster.vq import vq, kmeans, whiten
-
+from funciones import *
+from scipy.cluster.vq import vq, whiten
+import matplotlib.pyplot as plt
 
 
 def get_assignments(codebook, descriptores):
+    norm_descriptores = whiten(descriptores) # Normaliza descriptores
+    assignments,_ = vq(descriptores, codebook) # genera el vector de assigments
 
-    norm_descriptores = whiten(descriptores) #Normaliza descriptores
-
-    code,_ = vq(norm_descriptores, codebook) # genera el vector de assigments
-
-    code.sort() #ordena el vector code
-
-    return code
+    return assignments
 
 
+if __name__== "__main__":
 
-codebook1 = train_codebook(5, get_features("../TerrassaBuildings900/train/images/4406-18633-1754.jpg"))
-descriptoresss = get_features("../TerrassaBuildings900/train/images/4406-18633-1754.jpg")
-assig = get_assignments(codebook1, descriptoresss)
-print(assig) #Crea un vector ordenado con los descriptores que equivalen a cada region (k=5)
+    descriptor1 = get_local_features("../TerrassaBuildings900/train/images/4406-18633-1754.jpg")
+    codebook = train_codebook(5, descriptor1)
+    descriptor2= get_local_features("../TerrassaBuildings900/val/images/22053-9694-8921.jpg")
+    assig = get_assignments(codebook, descriptor2)
+
+    print(assig)
+    print "Longuitud del assignments= " + str(len(assig))
+    
+    plt.scatter(descriptor2[:,0], descriptor2[:,1]), plt.scatter(codebook[:,0], codebook[:,1], color='r'), plt.show()
+
+
 
