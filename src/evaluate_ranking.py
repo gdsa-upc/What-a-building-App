@@ -1,13 +1,7 @@
 # -*- coding: utf-8 -*-
-import cv2
-import pickle #Ejemplos de serialización: https://docs.python.org/2/library/pickle.html
 import numpy as np
+import pickle
 import os
-from sklearn.metrics import label_ranking_average_precision_score
-
-from sklearn.metrics import recall_score
-from sklearn.metrics import f1_score
-from sklearn.metrics import confusion_matrix
 
 #    Para utilizar el path se debe utilizar una estructura asi:
 
@@ -21,40 +15,49 @@ path_imagenes_train = "../TerrassaBuildings900/train/images/"
 path_imagenes_val = "../TerrassaBuildings900/val/images/"
 dir_archivos_txt = "../txt/"
 dir_descriptores = "../descriptores/"
-dir_rank= "../rank"
+dir_rank= "../rank/"
 dir_princ="../"
 
 
+def evaluate_rank(dir_rank):
+    nfiles = os.listdir(dir_rank) 
+    ground_truth_val = open("../TerrassaBuildings900/val/annotation.txt", "r")
+    ground_truth_train = open("../TerrassaBuildings900/train/annotation.txt","r")
+    truth = {} #inicialitzem una taula on l'index es la id de la imatge i conté la seva categoria
+    AP = {}
+    next(ground_truth_val)#eliminem la primera linia de l'arxiu ja que no ens interessa
+    next(ground_truth_train)#eliminem la primera linia de l'arxiu ja que no ens interessa
+    for line in ground_truth_val:
+        id_foto = line.index("\t")
+        final = line.index("\n")
+        truth[line[0:id_foto]] = line[id_foto+1:final] #guardem la categoria de cada imatge a un vector
+    for line in ground_truth_train:
+        id_foto = line.index("\t")
+        final = line.index("\n")
+        truth[line[0:id_foto]] = line[id_foto+1:final] #guardem la categoria de cada imatge a un vector
+    MAN = 0
+    for file in nfiles:
+        ranking = open(dir_rank+"/"+file,"r")#obrim l'arxiu rank d'una imatge de cerca
+        filename = file[0:file.index(".txt")]
+        categoria = truth[filename] #assignem la categoria que té la imatge de cerca
+        relevants = 0
+        precision = 0
+        APC = 0
+        AP[filename] = 0
+        irrelevants = 0
+        k = 0
+        for line in ranking:
+            final = line.index("\n")
+            k += 1
+            if truth[line[0:final]] == categoria: #si la id de la imatge coincideix amb la categoria sumem + 1 a relevants
+                relevants += 1 
+                precision = precision + float(relevants)/float(k) #calculem la precisio per cada k
+            else:
+                irrelevants += 1
+        AP[filename] = float(precision)/float(relevants) #calculem la AP de cada imatge de cerca
+        APC = APC + AP[filename]  #calculem la AP acumulada de cada imatge de cerca
+        ranking.close()
+    MAN = APC/len(nfiles) #calcul del MAN
+    return AP, MAN #retornem els valors de AP de cada imatge i de MAN
 
-
-def evaluate_ranking(directorio_lista, trainorval):    #definimos funcion con entradas directorio con la lista, y el tipo si es training or validation
-    features_val = pickle.load( open("../rank"+kval,".txt", "r" ) )
-    features_train = pickle.load( open("../descriptores/"+features_train, "r" ) )
-    
-    f= open("../TerrassaBuildings900/val/annotation.txt", "r") #Obrim l'arxiu per llegir el validation de ground truth
-    val_annotation = f.readlines()
-    f.close()
-    
-    g = open("../TerrassaBuildings900/train/annotation.txt", "r") #Obrim l'arxiu per llegir el training de ground truth
-    train_annotation = g.readlines()
-    g.close()
-        
-   
-    for line in directorio_lista:      #per cada linia del directori rank...
-       
-    if trainorval=="val":
-    AP = label_ranking_average_precision_score(directorio_lista, val_annotation)     # calcular la average precision en el cas que sigui val_annotation
-    
-    else if trainorval=="train":
-    AP = label_ranking_average_precision_score(directorio_lista, train_annotation)  #calcular la average precision en cas que sigui train_annotation
-    
-    
-
-#y_true = np.array([[1, 0, 0], [0, 0, 1]])
-#y_score = np.array([[0.75, 0.5, 1], [1, 0.2, 0.1]])
-#label_ranking_average_precision_score(y_true, y_score)         
-#0.416...
-
-
-
-
+AP,MAN = evaluate_rank(dir_rank)
