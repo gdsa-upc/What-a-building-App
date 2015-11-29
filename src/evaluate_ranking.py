@@ -38,7 +38,7 @@ def evaluate_rank(dir_rank):
     MAN = 0
     for file in nfiles:
         ranking = open(dir_rank+"/"+file,"r")#obrim l'arxiu rank d'una imatge de cerca
-        filename = file[0:file.index(".txt")]
+        filename = file[5:file.index(".txt")] #Amb el numero 5, no agafem la paraula "rank_" 
         categoria = truth[filename] #assignem la categoria que té la imatge de cerca
         relevants = 0
         precision = 0
