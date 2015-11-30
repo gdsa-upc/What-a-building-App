@@ -21,7 +21,7 @@ import os.path
 
 def get_features(db_train_txt, db_val_txt, dir_train, dir_val):
 
-    n_rep= 2 #numero de imagenes que cogeras (para hacer pruebas), para el final con poner 999 vale
+    n_rep= 5 #numero de imagenes que cogeras (para hacer pruebas), para el final con poner 999 vale
     db_train = open(db_train_txt, 'r') #Abrir el archivo de con las ID's de las imangenes
     db_val = open(db_val_txt, 'r') #Abrir el archivo de con las ID's de las imangenes
 
@@ -30,11 +30,7 @@ def get_features(db_train_txt, db_val_txt, dir_train, dir_val):
     vec_features=[]
     
     if (os.path.isfile("../txt/codebook.p") == False):
-        i=0
         for line in db_train:
-            if i>=n_rep:
-                break
-            i+=1
             #print "codebook: "+ str(i)+ "\n"
             im_id = line[0:-1]
             ruta= "../TerrassaBuildings900/train/images/" + str(im_id)
@@ -54,12 +50,8 @@ def get_features(db_train_txt, db_val_txt, dir_train, dir_val):
 
 
     dic_train={}
-    i=0
     db_train.seek(0)
     for line in db_train:
-        if i>=n_rep:
-            break
-        i+=1
         #print "dic train: "+ str(i)+ "\n"
 
         im_id= line[0:-1]
