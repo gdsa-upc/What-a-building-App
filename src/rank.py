@@ -2,41 +2,34 @@
 import os
 import pickle
 import numpy as np
+from sklearn.metrics import pairwise_distances
 
-# Calcular distancia: POR IMPLEMENTAR
-def distance(x, y): 
-    return np.random.randint(0, 451)
-    
-#he encontrado esto: estoy mirando a ver si funciona para la funcion distance
-import numpy as np
-def find_nearest(array,value):
-    idx = (np.abs(array-value)).argmin()
-    return array[idx]
-#hasta aqui
-
-def rank(features_file, results_dir, features_train, annotation_path):
-    features_val = pickle.load( open("../descriptores/"+features_file, "r" ) )
-    features_train = pickle.load( open("../descriptores/"+features_train, "r" ) )
+def rank(train_bow_path, val_bow_path, results_dir, annotation_path):
+    train_bow = pickle.load( open(train_bow_path, "r") )
+    val_bow = pickle.load( open(val_bow_path, "r") )
     
 
     # Creamos el directorio si no existe
     if not os.path.exists(results_dir):
         os.makedirs(results_dir)
-
-    # Por cada imagen en el set de validación, creamos un ranking de las imagenes de training y lo escribimos en fichero
-    vector= []
-    for k_val, v_val in features_val.items():
-        annotations= open(annotation_path, "r")
+    i=0
+    annotations= open(annotation_path, "r")
+    for val_id, val_key in val_bow.items():
+        annotations.seek(0)
+        rank= {}
         for line in annotations:
             rec= line.split("\t")
-            if rec[0]==k_val and rec[1]!="desconegut\n":
-                rank= open(results_dir + "/rank_" + k_val +'.txt', 'w')
-                for k_train, v_train in features_train.items():
-                    vector.insert( distance(v_train[0], v_val[0]), k_train) 
-                for item in vector:
-                    rank.write("%s\n" % item)
-                vector=[]
-                rank.close()
+            print rec[0] + " = " + val_id + "\n"
+            print rec[1]
+            if rec[0]== val_id and rec[1]!= "desconegut\n":
+                print "BIEEEEEN\n\n\n"
+                for train_id, train_key in train_bow.items():
+                    rank[train_id]= pairwise_distances(val_key, train_key, metric='euclidean', n_jobs=1)
+                rank_file= open(results_dir + "/rank_" + val_id + ".txt", 'w')
+                for k, v in sorted(rank.items(), key=lambda (k,v ): (v,k) ):
+                    rank_file.write(k)
+                    rank_file.write("\n")
+                rank_file.close()
 
 # Ejecutamos
-rank("descriptor_val.p", "../rank/", "descriptor_train.p", "../TerrassaBuildings900/val/annotation.txt")
+rank("../txt/bow_train.p", "../txt/bow_val.p", "../rank/", "../TerrassaBuildings900/val/annotation.txt")
