@@ -3,7 +3,7 @@ import cv2
 import numpy as np
 from numpy import array
 import os
-
+from sklearn.cluster import KMeans, MiniBatchKMeans
 from funciones import *
 import scipy
 from scipy.cluster.vq import vq, kmeans, whiten
@@ -23,18 +23,20 @@ from scipy.cluster.vq import vq, kmeans, whiten
 
 def train_codebook(numClusters, descriptores): #Només para las imagenes de train
 
+    #Con KMeans
+    #centroides,_= kmeans(descriptores, numClusters)
 
-    centroides,_= kmeans(descriptores, numClusters)
+    #Con MiniBatchKMeans
+    centroides= MiniBatchKMeans(numClusters)
+    centroides.fit(descriptores)
 
-    print "codebook creado\n"
     return centroides # Devuelve el vector codebook
 
 
 if __name__== "__main__":
     descriptoresss = get_local_features("../TerrassaBuildings900/train/images/4406-18633-1754.jpg")
     codebook1 = train_codebook(1, descriptoresss)
-    
-    
-    print(codebook1.size)
-    print(codebook1.shape)
-    print(codebook1[:])
+#    print codebook1 
+#    print(codebook1.size)
+#    print(codebook1.shape)
+#    print(codebook1[:])
