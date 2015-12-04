@@ -57,11 +57,9 @@ def evaluate_rank(dir_rank):
                 irrelevants += 1
         AP[filename] = float(precision)/float(relevants) #calculem la AP de cada imatge de cerca
         APC += AP[filename]  #calculem la AP acumulada de cada imatge de cerca
-        print AP[filename]
 
         ranking.close()
     MAN = APC/len(nfiles) #calcul del MAN
-    print APC
     return AP, MAN #retornem els valors de AP de cada imatge i de MAN
 
 
@@ -69,4 +67,4 @@ AP,MAN = evaluate_rank(dir_rank)
 
 print AP
 
-print "MAN: " + str(MAN) + "\n"
+print "\nMAN: " + str(MAN) + "\n"
