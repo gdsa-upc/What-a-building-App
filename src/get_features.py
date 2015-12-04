@@ -3,13 +3,6 @@ import cv2
 import pickle #Ejemplos de serialización: https://docs.python.org/2/library/pickle.html
 import numpy as np
 import os
-"""
-
-from funciones.build_bow import build_bow
-from funciones.get_local_features import get_local_features
-from funciones.train_codebook import train_codebook
-from funciones.get_assignments import get_assignments
-"""
 from funciones import *
 from scipy.cluster.vq import vq, kmeans, whiten
 import os.path
@@ -21,17 +14,26 @@ import os.path
 
 def get_features(db_train_txt, db_val_txt, dir_train, dir_val):
 
-    n_rep= 5 #numero de imagenes que cogeras (para hacer pruebas), para el final con poner 999 vale
-    db_train = open(db_train_txt, 'r') #Abrir el archivo de con las ID's de las imangenes
-    db_val = open(db_val_txt, 'r') #Abrir el archivo de con las ID's de las imangenes
+    #numero de imagenes de train que utilizas para crear el codebook
+    n_img_codebook= 50
+    #numero de imagenes tanto de train como de val para crear los assignments
+    n_img= 50
+    #numero de centroides
+    n_centroides= 200
+    db_train = open(db_train_txt, 'r') #Abrir el archivo de con las ID's de las imangenes de train
+    db_val = open(db_val_txt, 'r') #Abrir el archivo de con las ID's de las imangenes de val
 
     #if not os.path.exists(directorio_descriptores):
     #    os.makedirs(directorio_descriptores)
-    vec_features=[]
     
+    vec_features=[]
+    i=0
     if (os.path.isfile("../txt/codebook.p") == False):
         for line in db_train:
-            #print "codebook: "+ str(i)+ "\n"
+            if i>=n_img_codebook:
+                break
+            print "Codebook: " + str(i) + "\n"
+            i+=1
             im_id = line[0:-1]
             ruta= "../TerrassaBuildings900/train/images/" + str(im_id)
 
@@ -43,17 +45,22 @@ def get_features(db_train_txt, db_val_txt, dir_train, dir_val):
             for feat in features:
                 vec_features.append(feat)
 
-        codebook= train_codebook(50, vec_features)
+        codebook= train_codebook(n_centroides, vec_features)
         pickle.dump(codebook, open("../txt/codebook.p", "wb" ) )
+        print "Codebook creado\n"
     else:
         codebook= pickle.load(open( "../txt/codebook.p", "rb"))
+        print "Codebook cogido\n"
 
-
+    i=0
     dic_train={}
     db_train.seek(0)
     for line in db_train:
+        if i>=n_img:
+            break
+        i+=1
         #print "dic train: "+ str(i)+ "\n"
-
+        print "feature_train: " + str(i) + "\n"
         im_id= line[0:-1]
         ruta= "../TerrassaBuildings900/train/images/" + str(im_id)
         if os.path.isfile(ruta + ".jpg"):
@@ -63,15 +70,16 @@ def get_features(db_train_txt, db_val_txt, dir_train, dir_val):
 
         assignments= get_assignments(codebook, features)
         #print assignments
-        bag= build_bow(assignments)
+        bag= build_bow(assignments, n_centroides)
         dic_train[im_id]= bag
-
     dic_val={}
     i=0
     for line in db_val:
-        if i>=n_rep:
+        if i>=n_img:
             break
         #print "dic_val: "+ str(i)+ "\n"
+        print "feature_val: " + str(i) + "\n"
+
         i+=1
         im_id= line[0:-1]
         ruta= "../TerrassaBuildings900/val/images/" + str(im_id)
@@ -81,7 +89,7 @@ def get_features(db_train_txt, db_val_txt, dir_train, dir_val):
             features= whiten(get_local_features(ruta + ".JPG"))
 
         assignments= get_assignments(codebook, features)
-        bag= build_bow(assignments)
+        bag= build_bow(assignments, n_centroides)
         #print bag
         #print len(bag)
         dic_val[im_id]= bag
