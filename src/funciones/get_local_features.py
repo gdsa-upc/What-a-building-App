@@ -10,7 +10,7 @@ def get_local_features(imatge):
     img = cv2.imread(imatge)
 
 
-    small = cv2.resize(img, (500, 500)) #escalamos la imagen a 500x500
+    small = cv2.resize(img, (128, 128)) #escalamos la imagen a 500x500
     
     # Pruebas res = cv2.resize(img,((0.5)*width, (0.5)*height), interpolation = cv2.INTER_CUBIC)
     #small = cv2.resize(img, (0,0), fx=0.1, fy=0.1) #Hacemos un risize i reducimos el tamaño de los ejes a un 10%
