@@ -1,96 +1,39 @@
-import numpy as np
+# -*- coding: utf-8 -*-
+
 import os
-from funciones import *
-from scipy.cluster.vq import vq, kmeans, whiten
-import os.path
+
+
+#    Lee las imagenes de una carpeta y almacena el las ID's de cada imagen en un fichero txt
+
+
+#    Para utilizar el path se debe utilizar una estructura asi:
+
+#    TerrassaBuildings900               -> Aquí deben estar las imágenes
+#    src                                -> Aquí deben estar los archivos .py
+#    txt                                -> Aquí guardaremos los ficheros txt generados
+
+
+#    Para utilizar las variables de path debemos ejecutar el script desde la carpeta /src.
+
+path_imagenes_train = "../TerrassaBuildings900/train/images/" #Esta variable la utilizamos para referirnos al directorio donde extraer las imagenes.
+path_imagenes_val = "../TerrassaBuildings900/val/images/" #Si estamos en el directorio /src y ejecutamos ../ volvemos al directorio el cual pertenece que es nuestro directorio master.
+dir_archivos_txt = "../txt/"
+
+
+def build_database(directorio_imagenes, directorio_txt, trainorval):
+    imagenes_dir = os.listdir(directorio_imagenes) #Asigna el nombre de cada imagen a una posición del vector image_files[1]
+    print("Archivos leidos del directorio(path absoluto): " + os.path.abspath(directorio_imagenes))
+    if not os.path.exists(dir_archivos_txt):
+        os.makedirs(dir_archivos_txt)
+
+    fichero_txt = open(directorio_txt + 'ID_images_'+trainorval+'.txt', 'w') # Abre el fichero donde guardaremos las ID's
+    for imagenes  in imagenes_dir: # Mientras haya imagenes en el directorio imagenes_dir...
+        fichero_txt.write(imagenes[0:-4] + "\n") # escribe la el nombre de la id sin el jpg y añade un INTRO al final de cada nombre
 
 
 
 
-#archivo image id es el nombre del archivo. En este caso hay dos ID_images_train.txt o ID_images_val.txt
+# Crear los dos ficheros txt con las ID para cada directorio
 
-def get_features(db_train_txt, db_val_txt, dir_train, dir_val):
-
-    n_img_codebook= 999 #numero de imagenes que cogeras (para hacer pruebas), para el final con poner 999 vale
-    n_img= 999
-    n_centroides= 50 #debería ser 100 al final
-    db_train = open(db_train_txt, 'r') #Abrir el archivo de con las ID's de las imangenes
-    db_val = open(db_val_txt, 'r') #Abrir el archivo de con las ID's de las imangenes
-
-    #if not os.path.exists(directorio_descriptores):
-    #    os.makedirs(directorio_descriptores)
-    vec_features=[]
-    
-    i=0
-    if (os.path.isfile("../txt/codebook.p") == False):
-        for line in db_train:
-            if i>=n_img_codebook:
-                break
-            print "Codebook: " + str(i) + "\n"
-            i+=1
-            im_id = line[0:-1]
-            ruta= "../TerrassaBuildings900/train/images/" + str(im_id)
-
-            if os.path.isfile(ruta + ".jpg"):
-                features= whiten(get_local_features(ruta + ".jpg"))
-            else:
-                features= whiten(get_local_features(ruta + ".JPG"))
-    
-            for feat in features:
-                vec_features.append(feat)
-
-        codebook= train_codebook(n_centroides, vec_features)
-        pickle.dump(codebook, open("../txt/codebook.p", "wb" ) )
-        print "Codebook creado\n"
-    else:
-        codebook= pickle.load(open( "../txt/codebook.p", "rb"))
-        print "Codebook cogido\n"
-
-    i=0
-    dic_train={}
-    db_train.seek(0)
-    for line in db_train:
-        if i>=n_img:
-            break
-        i+=1
-        #print "dic train: "+ str(i)+ "\n"
-        print "feature_train: " + str(i) + "\n"
-        im_id= line[0:-1]
-        ruta= "../TerrassaBuildings900/train/images/" + str(im_id)
-        if os.path.isfile(ruta + ".jpg"):
-            features= whiten(get_local_features(ruta + ".jpg"))
-        else:
-            features= whiten(get_local_features(ruta + ".JPG"))
-
-        assignments= get_assignments(codebook, features)
-        #print assignments
-        bag= build_bow(assignments, 100)
-        dic_train[im_id]= bag
-    dic_val={}
-    i=0
-    for line in db_val:
-        if i>=n_img:
-            break
-        #print "dic_val: "+ str(i)+ "\n"
-        print "feature_train: " + str(i) + "\n"
-
-        i+=1
-        im_id= line[0:-1]
-        ruta= "../TerrassaBuildings900/val/images/" + str(im_id)
-        if os.path.isfile(ruta + ".jpg"):
-            features= whiten(get_local_features(ruta + ".jpg"))
-        else:
-            features= whiten(get_local_features(ruta + ".JPG"))
-
-        assignments= get_assignments(codebook, features)
-        bag= build_bow(assignments, 100)
-        #print bag
-        #print len(bag)
-        dic_val[im_id]= bag
- 
-    pickle.dump(dic_train, open("../txt/bow_train.p", "wb" ) )
-    pickle.dump(dic_val, open("../txt/bow_val.p", "wb" ) )
-
-
-get_features("../txt/ID_images_train.txt", "../txt/ID_images_val.txt", "../TerrassaBuildings900/train/images/", "../TerrassaBuildings900/val/images/")
-
+build_database(path_imagenes_train, dir_archivos_txt, 'train')
+build_database(path_imagenes_val, dir_archivos_txt, 'val')
