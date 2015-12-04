@@ -22,7 +22,6 @@ def rank(train_bow_path, val_bow_path, results_dir, annotation_path):
             print rec[0] + " = " + val_id + "\n"
             print rec[1]
             if rec[0]== val_id and rec[1]!= "desconegut\n":
-                print "BIEEEEEN\n\n\n"
                 for train_id, train_key in train_bow.items():
                     rank[train_id]= pairwise_distances(val_key, train_key, metric='euclidean', n_jobs=1)
                 rank_file= open(results_dir + "/rank_" + val_id + ".txt", 'w')
