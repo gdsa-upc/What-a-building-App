@@ -4,9 +4,13 @@ import matplotlib.pyplot as plt
 
 
 def get_assignments(codebook, descriptores):
-    norm_descriptores = whiten(descriptores) # Normaliza descriptores
-    assignments,_ = vq(descriptores, codebook) # genera el vector de assigments
-
+    #norm_descriptores = whiten(descriptores) # Normaliza descriptores
+    
+    #Con KMeans
+    #assignments,_ = vq(descriptores, codebook)
+    
+    #Con MiniBatchKMeans
+    assignments= codebook.predict(descriptores)
     return assignments
 
 
@@ -21,6 +25,8 @@ if __name__== "__main__":
     print "Longuitud del assignments= " + str(len(assig))
     
     plt.scatter(descriptor2[:,0], descriptor2[:,1]), plt.scatter(codebook[:,0], codebook[:,1], color='r'), plt.show()
+
+
 
 
 
