@@ -35,7 +35,7 @@ def evaluate_rank(dir_rank):
         id_foto = line.index("\t")
         final = line.index("\n")
         truth[line[0:id_foto]] = line[id_foto+1:final] #guardem la categoria de cada imatge a un vector
-    MAN = 0
+    MAP = 0
     APC = 0
 
     for file in nfiles:
@@ -59,12 +59,12 @@ def evaluate_rank(dir_rank):
         APC += AP[filename]  #calculem la AP acumulada de cada imatge de cerca
 
         ranking.close()
-    MAN = APC/len(nfiles) #calcul del MAN
-    return AP, MAN #retornem els valors de AP de cada imatge i de MAN
+    MAP = APC/len(nfiles) #calcul del MAN
+    return AP, MAP #retornem els valors de AP de cada imatge i de MAN
 
 
-AP,MAN = evaluate_rank(dir_rank)
+AP,MAP = evaluate_rank(dir_rank)
 
 print AP
 
-print "\nMAN: " + str(MAN) + "\n"
+print "\nMAP: " + str(MAP) + "\n"
