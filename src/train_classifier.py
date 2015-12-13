@@ -1,4 +1,4 @@
-from sklearn import svm
+from sklearn import svm, grid_search
 import pickle
 
 
@@ -34,12 +34,28 @@ def train_classifier(dic_train_path, ann_train_path):
 
 
 
-    #entrenamos 
-    clf= svm.SVC()
-    clf.fit(array_bow, array_clases)
-    
-    print clf.predict(array_bow[2])
+    #entrenamos
+    weight= {}
+    total_n_samples= len(array_clases)
+    n_classes= len(set(array_clases))
 
+    for clase in set(array_clases):
+        weight[clase]= float(total_n_samples)/ float(( (n_classes)*  array_clases.count(clase)  ))
     
+    
+    svr= svm.SVC()
+    parameters= {'kernel':('linear', 'rbf'), 'C':[1, 2, 3, 4, 5, 10], 'gamma': [1e-2, 1e-4]}
+    a= grid_search.GridSearchCV(svr, parameters)
+    a.fit(array_bow, array_clases)
+    bp= a.best_params_
+    print "Best parameters:"
+    print bp
+    
+    clf= svm.SVC(C=bp['C'], kernel= bp['kernel'], gamma=bp['gamma'], class_weight= weight)
+    #clf= svm.SVC(C=100, kernel='linear')
+    clf.fit(array_bow, array_clases)
+    pickle.dump(clf, open("../txt/classifier.p", "wb" ) )
+    
+
 if __name__ == "__main__":
-    train_classifier("txt/bow_train.p", "TerrassaBuildings900/train/annotation.txt")
+    train_classifier("../txt/bow_train.p", "../TerrassaBuildings900/train/annotation.txt")
