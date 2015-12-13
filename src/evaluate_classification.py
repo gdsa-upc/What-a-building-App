@@ -71,7 +71,7 @@ print(precision_score(gt_val, aa_val, average='macro')) #ho calcula per tots
 print("\n")
 
 print("Precision per cada classe")
-print(precision_score(gt_val, aa_val, average=None)) #ho calcula per tots
+print(precision_score(gt_val, aa_val, average=None)) #ho calcula per cada classe
 print("\n")
 
 
@@ -93,7 +93,7 @@ print(f1_score(gt_val, aa_val, average='macro')) #ho calcula per tots
 print("\n")
 
 print("F1-score per cada classe")
-print(f1_score(gt_val, aa_val, average=None)) #ho calcula per tots
+print(f1_score(gt_val, aa_val, average=None)) #ho calcula per cada classe
 print("\n")
 
 #confusion matrix test
