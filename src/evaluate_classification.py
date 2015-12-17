@@ -3,6 +3,7 @@ import cv2
 import pickle #Ejemplos de serialización: https://docs.python.org/2/library/pickle.html
 import numpy as np
 import os
+import matplotlib.pyplot as plt
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import recall_score
 from sklearn.metrics import f1_score
@@ -26,35 +27,55 @@ f = open("../TerrassaBuildings900/val/annotation.txt", "r") #Obrim l'arxiu per l
 gt_val = f.readlines() #creem una llista amb cada un dels elements del .txt
 f.close()
 
+f = open("../TerrassaBuildings900/val/annotation.txt", "r") #Obrim l'arxiu per llegir el validation de ground truth
+gt_val_ID = f.readlines()
+f.close()
+
 j=0
 gt_val.pop(0) #eliminem la primera linia (ImageID ClassID)
+gt_val_ID.pop(0)
+
 for i in gt_val:
-    try:
-        label = i.replace('\n','') #eliminem els \n
-        label=label.split('\t') #separem les linies en dos a partir del \t
-        label=label[1] #agafem només el nom de la classe
-        gt_val[j]=label #guardem al vector només el nom de l'etiqueta
-        j=j+1
-    except:
-        j=j+1
+    label = i.replace('\n','') #eliminem els \n
+    label=label.split('\t') #separem les linies en dos a partir del \t
+    gt_val_ID[j]=label[0]
+    label=label[1] #agafem només el nom de la classe
+    gt_val[j]=label #guardem al vector només el nom de l'etiqueta
+    j=j+1
 
+f = open("../txt/classification.txt", "r") #Obrim l'arxiu val de automatic annotation
+aa_val = f.readlines()
+f.close()
 
-h = open("../txt/classificacio.txt", "r") #Obrim l'arxiu val de automatic annotation
-aa_val = h.readlines()
-h.close()
+f = open("../txt/classification.txt", "r") 
+aa_val_ID = f.readlines()
+f.close()
+
 j=0
 
 for i in aa_val:
-    try:
-        label = i.replace('\n','') 
-        label=label.split('\t') 
-        label=label[1] 
-        aa_val[j]=label 
-        j=j+1
-    except:
-        j=j+1
+    label = i.replace('\n','') 
+    label=label.split('\t') 
+    aa_val_ID[j]=label[0]
+    label=label[1] 
+    aa_val[j]=label 
+    j=j+1
+     
+j=0
+prova=[]
+prova_ID=[]
+for i in aa_val:
+    w = gt_val_ID[j]
+    k=0
+    for l in aa_val_ID:
+        if l==w:
+            prova.append(aa_val[k])
+            prova_ID.append(aa_val_ID[k])
+        k=k+1     
+    j=j+1
 
-
+aa_val=prova
+aa_val_ID=prova_ID
 
 # accuracy test
 #y_true = [gt_train]
