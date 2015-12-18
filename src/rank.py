@@ -31,4 +31,5 @@ def rank(train_bow_path, val_bow_path, results_dir, annotation_path):
                 rank_file.close()
 
 # Ejecutamos
-rank("../txt/bow_train.p", "../txt/bow_val.p", "../rank/", "../TerrassaBuildings900/val/annotation.txt")
+if __name__=="__main__":
+    rank("../txt/bow_train.p", "../txt/bow_val.p", "../rank/", "../TerrassaBuildings900/val/annotation.txt")
