@@ -62,9 +62,28 @@ def evaluate_rank(dir_rank):
     MAP = APC/len(nfiles) #calcul del MAN
     return AP, MAP #retornem els valors de AP de cada imatge i de MAN
 
+def save_rank():
+    ann= open("../TerrassaBuildings900/val/annotation.txt", 'r')
+    
+    images_dir= os.listdir("../rank/")
+    rank_kaggle= open("../txt/rank_kaggle.cvs", 'w') 
+    rank_kaggle.write("Query,RetrievedDocuments\n")
+    ann.next()
+    for a in ann:
+        a_id = a.split("\t")
+        if a_id[1] != "desconegut\n":
+            rank_kaggle.write(a_id[0] + ",")
+            rank_n= open("../rank/rank_" + a_id[0] + ".txt" )
+            for line in rank_n:
+                ids= line.split("t")
+                rank_kaggle.write(ids[0][0:-1] + " ")
+            rank_kaggle.write("\n")
+            rank_n.close()
+    ann.close()
+    rank_kaggle.close()
 
-AP,MAP = evaluate_rank(dir_rank)
-
-print AP
-
-print "\nMAP: " + str(MAP) + "\n"
+if __name__=="__main__":
+    save_rank()
+    AP,MAP = evaluate_rank(dir_rank)
+    print AP
+    print "\nMAP: " + str(MAP) + "\n"
