@@ -95,6 +95,32 @@ for i in aa_val:
 aa_val=aa_val_aux
 aa_val_ID=aa_val_ID_aux
 
+def save_classification_file(names, labels):
+
+    '''
+    Saves the classification results in the format:
+    Id,Prediction
+    24551-2934-8931,ajuntament
+    30017-26696-17117,desconegut
+    3398-20429-27862,farmacia_albinyana
+    4611-17202-4774,catedral
+    etc
+    :param names: list of image ids
+    :param labels: list of predictions to the image Ids
+    '''
+    f = open(dir_archivos_txt+"classification_kaggle.txt", "w")    
+    
+    # Write header
+    f.write("Id,Prediction\n")
+
+    # Write image Ids and class labels
+    for i in range(len(names)):
+        f.write(names[i] + ','+ labels[i] + '\n')
+
+    f.close()
+
+save_classification_file(aa_val_ID, aa_val)
+
 # accuracy test
 #y_true = [gt_val]
 #y_pred = [aa_val]
